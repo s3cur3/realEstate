@@ -8,7 +8,7 @@
 
     <ion-side-menu side="left">
         <header class="bar bar-header bar-stable">
-            <h1 class="title">Left</h1>
+            <h1 class="title">Menu</h1>
         </header>
         <ion-content class="has-header">
             <ion-list>
@@ -21,7 +21,7 @@
                     Property Information
                 </ion-item>
                 <ion-item nav-clear menu-close href="#/app/property/analysis" class="item-icon-left">
-                    <i class="icon" ng-class="{'ion-close-circled assertive': !greenLight(), 'ion-checkmark-circled positive': greenLight()}"></i>
+                    <i class="icon" ng-class="{'ion-close-circled': !greenLight(), 'ion-checkmark-circled': greenLight()}"></i>
                     Property Analysis
                 </ion-item>
                 <ion-item nav-clear menu-close href="#/app/browse">
