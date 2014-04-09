@@ -23,7 +23,8 @@ module.exports = function (grunt) {
             // configurable paths
             //app: require('./bower.json').appPath || 'app',
             app: require('./bower.json').appPath || 'www',
-            dist: 'dist'
+            dist: 'dist',
+            bower_components: 'bower_components'
         },
 
         // Watches files for changes and runs tasks based on the changed files
@@ -160,7 +161,8 @@ module.exports = function (grunt) {
             sass: {
                 //src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
                 src: ['<%= yeoman.app %>/css/{,*/}*.{scss,sass}'],
-                ignorePath: '<%= yeoman.app %>/bower_components/'
+                //ignorePath: '<%= yeoman.app %>/bower_components/'
+                ignorePath: '<%= yeoman.bower_components %>/'
             }
         },
 
@@ -176,7 +178,8 @@ module.exports = function (grunt) {
                 javascriptsDir: '<%= yeoman.app %>/scripts',
                 //fontsDir: '<%= yeoman.app %>/styles/fonts',
                 fontsDir: '<%= yeoman.app %>/css/fonts',
-                importPath: '<%= yeoman.app %>/bower_components',
+                //importPath: '<%= yeoman.app %>/bower_components',
+                importPath: '<%= yeoman.bower_components %>',
                 httpImagesPath: '/images',
                 httpGeneratedImagesPath: '/images/generated',
                 //httpFontsPath: '/styles/fonts',

@@ -11,16 +11,20 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'www/bower_components/angular/angular.js',
-            'www/bower_components/angular-mocks/angular-mocks.js',
-            'www/bower_components/angular-resource/angular-resource.js',
-            'www/bower_components/angular-cookies/angular-cookies.js',
-            'www/bower_components/angular-sanitize/angular-sanitize.js',
-            'www/bower_components/angular-route/angular-route.js',
-            'www/js/*.js',
+            'bower_components/angular/angular.js',
+            'bower_components/angular-mocks/angular-mocks.js',
+            'bower_components/angular-resource/angular-resource.js',
+//            'bower_components/angular-cookies/angular-cookies.js',
+//            'bower_components/angular-sanitize/angular-sanitize.js',
+//            'bower_components/angular-route/angular-route.js',
+            'bower_components/lodash/dist/lodash.min.js',
+            'www/lib/ionic/js/ionic.bundle.js',
+            'www/js/app.js',
+            'www/js/controllers.js',
             'www/js/**/*.js',
             'test/mock/**/*.js',
-            'test/spec/**/*.js'
+            'test/spec/**/*.js',
+            //'test/unit/**/*.js'
         ],
 
         // list of files / patterns to exclude
@@ -47,7 +51,7 @@ module.exports = function (config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)‰
-        browsers: ['Safari'],
+        browsers: ['Chrome'],
 
 
         // Continuous Integration mode

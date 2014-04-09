@@ -1,4 +1,4 @@
-{
+/*{
     "name": "ionic-project",
     "version": "0.0.0",
     "dependencies": {
@@ -16,4 +16,4 @@
         "angular-mocks": "1.2.15",
         "angular-scenario": "1.2.15"
     }
-}
+}*/
