@@ -12,57 +12,57 @@
 
         <label class="item item-input item-icon-right">
             <span class="input-label">Cap Rate</span>
-            {{property.getCapRate() | percent}}
+            {{calc.getCapRate(property) | percent}}
             <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.capRateGood(), 'ion-checkmark-circled positive': analysis.capRateGood()}"></i>
         </label>
 
         <label class="item item-input item-icon-right">
             <span class="input-label">Cash Flow</span>
-            {{property.getCashFlow() | currency }}
+            {{calc.getCashFlow(property) | currency }}
             <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.cashFlowGood(), 'ion-checkmark-circled positive': analysis.cashFlowGood()}"></i>
         </label>
 
         <label class="item item-input">
             <span class="input-label">Cash Flow per Year</span>
-            {{property.getCashFlow() * 12 | currency }}
+            {{calc.getCashFlow(property) * 12 | currency }}
         </label>
 
         <label class="item item-input">
             <span class="input-label">The 29 Cash Flow Indicator</span>
-            {{property.getCashFlow() * 29 | currency }}
+            {{calc.getCashFlow(property) * 29 | currency }}
         </label>
 
         <label class="item item-input">
             <span class="input-label">Cash-on-Cash ROI</span>
-            {{property.getCashFlow() * 12 / property.getTotalCashOutlay() | percent }}
+            {{calc.getCashFlow(property) * 12 / property.getTotalCashOutlay() | percent }}
         </label>
 
         <label class="item item-input item-icon-right">
             <span class="input-label">Estimated LTV</span>
-            {{property.getLTV() | percent }}
+            {{calc.getLTV(property) | percent }}
             <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.ltvGood(), 'ion-checkmark-circled positive': analysis.ltvGood()}"></i>
         </label>
 
         <label class="item item-input item-icon-right">
             <span class="input-label">Estimated DSCR</span>
-            {{property.getDSCR() | number : 2}}
+            {{calc.getDSCR(property) | number : 2}}
             <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.dscrGood(), 'ion-checkmark-circled positive': analysis.dscrGood()}"></i>
         </label>
 
         <label class="item item-input item-icon-right">
             <span class="input-label">GRM</span>
-            {{property.getGRM() | number : 2}}
+            {{calc.getGRM(property) | number : 2}}
             <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.grmGood(), 'ion-checkmark-circled positive': analysis.grmGood()}"></i>
         </label>
 
         <label class="item item-input">
             <span class="input-label">Initial Cash Outlay</span>
-            {{property.getTotalCashOutlay() | currency }}
+            {{calc.getTotalCashOutlay(property) | currency }}
         </label>
 
         <label class="item item-input">
             <span class="input-label">Years to Recoup Investment</span>
-            {{property.getTotalCashOutlay() / property.getCashFlow() / 12 | number:2 }}
+            {{calc.getTotalCashOutlay(property) / calc.getCashFlow(property) / 12 | number:2 }}
         </label>
     </ion-content>
     <div class="bar bar-footer " ng-class="{'bar-balanced': greenLight(), 'bar-assertive': !greenLight()}">
