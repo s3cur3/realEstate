@@ -3,7 +3,7 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <a class="button button-clear button-positive" href="#/app/property/{{property.id}}/analysis">
+        <a class="button button-clear button-positive" href="#/app/properties/{{property.id}}/analysis">
             Analyze
         </a>
     </ion-nav-buttons>
@@ -93,7 +93,7 @@
                 <span class="input-label">Gross Monthly Rental Income</span>
                 <span class="input-units">$</span><input type="number" class="right" ng-model="property.insuranceCost">
             </label>
-            <a class="item button button-full button-positive" href="#/app/property/analysis">
+            <a class="item button button-full button-positive" href="/#/app/properties/{{property.id}}/analysis">
                 Get property analysis
             </a>
 

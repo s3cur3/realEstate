@@ -280,7 +280,7 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
             })
 
             .state('app.analysis', {
-                url: "/property/:propertyId/analysis",
+                url: "/properties/:propertyId/analysis",
                 views: {
                     'menuContent': {
                         templateUrl: "templates/analysis.html",

@@ -15,6 +15,11 @@ angular.module('RealEstateApp.controllers', [])
             ltv: 75
         };
 
+        $scope.selectProperty = function(prop, index) {
+            $scope.property = prop;
+            PropertyService.setLastActiveIndex(index || prop);
+        };
+
         $scope.analysis = {
             capRateGood: function() {
                 return $scope.calc.getCapRate( $scope.property ) * 100 >= $scope.criteria.capRate;
@@ -76,13 +81,6 @@ angular.module('RealEstateApp.controllers', [])
             $scope.properties = PropertyService.allProperties();
         }
 
-
-        $scope.selectProperty = function(project, index) {
-            $scope.property = project;
-
-            PropertyService.setLastActiveIndex(index || project);
-        };
-
         $scope.addProperty = function() {
             console.log("Adding property");
             var p = PropertyService.newProperty();
@@ -99,7 +97,7 @@ angular.module('RealEstateApp.controllers', [])
         // Update the currently-in-use property when we load this one
         var re = /[0-9]+$/;
         var id = $location.url().match(re);
-        $scope.property = PropertyService.getPropertyByID( id );
+        $scope.selectProperty( PropertyService.getPropertyByID(id) );
 
         // Update the master property list whenever we modify this property
         $scope.$watchCollection('property', function(updatedProperty, oldProperty) {

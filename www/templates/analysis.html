@@ -13,13 +13,13 @@
         <label class="item item-input item-icon-right">
             <span class="input-label">Cap Rate</span>
             {{calc.getCapRate(property) | percent}}
-            <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.capRateGood(), 'ion-checkmark-circled positive': analysis.capRateGood()}"></i>
+            <i class="icon" ng-class="{'ion-close-circled assertive': !analysis.capRateGood(), 'ion-checkmark-circled balanced': analysis.capRateGood()}"></i>
         </label>
 
         <label class="item item-input item-icon-right">
             <span class="input-label">Cash Flow</span>
             {{calc.getCashFlow(property) | currency }}
-            <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.cashFlowGood(), 'ion-checkmark-circled positive': analysis.cashFlowGood()}"></i>
+            <i class="icon" ng-class="{'ion-close-circled assertive': !analysis.cashFlowGood(), 'ion-checkmark-circled balanced': analysis.cashFlowGood()}"></i>
         </label>
 
         <label class="item item-input">
@@ -40,19 +40,19 @@
         <label class="item item-input item-icon-right">
             <span class="input-label">Estimated LTV</span>
             {{calc.getLTV(property) | percent }}
-            <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.ltvGood(), 'ion-checkmark-circled positive': analysis.ltvGood()}"></i>
+            <i class="icon" ng-class="{'ion-close-circled assertive': !analysis.ltvGood(), 'ion-checkmark-circled balanced': analysis.ltvGood()}"></i>
         </label>
 
         <label class="item item-input item-icon-right">
             <span class="input-label">Estimated DSCR</span>
             {{calc.getDSCR(property) | number : 2}}
-            <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.dscrGood(), 'ion-checkmark-circled positive': analysis.dscrGood()}"></i>
+            <i class="icon" ng-class="{'ion-close-circled assertive': !analysis.dscrGood(), 'ion-checkmark-circled balanced': analysis.dscrGood()}"></i>
         </label>
 
         <label class="item item-input item-icon-right">
             <span class="input-label">GRM</span>
             {{calc.getGRM(property) | number : 2}}
-            <i class="icon button-positive" ng-class="{'ion-close-circled assertive': !analysis.grmGood(), 'ion-checkmark-circled positive': analysis.grmGood()}"></i>
+            <i class="icon" ng-class="{'ion-close-circled assertive': !analysis.grmGood(), 'ion-checkmark-circled balanced': analysis.grmGood()}"></i>
         </label>
 
         <label class="item item-input">
