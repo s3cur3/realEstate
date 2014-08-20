@@ -127,6 +127,31 @@ angular.module('RealEstateApp.controllers', [])
     .controller('ProFormaCtrl', function($scope) {
         console.log("In ProFormaCtrl");
 
+
+        $scope.renderPDF = function() {
+            var doc = new jsPDF();
+
+            // We'll make our own renderer to skip this editor
+            var specialElementHandlers = {
+                '.button': function(element, renderer){
+                    return true;
+                }
+            };
+
+            // All units are in the set measurement for the document
+            // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
+            doc.fromHTML(
+                document.getElementById('pro-forma')[0], // ID to turn into a PDF
+                15, // x coord
+                15, // y coord
+                {
+                    'width': 170,
+                    'elementHandlers': specialElementHandlers
+                }
+            );
+
+            doc.save('Pro Forma.pdf');
+        }
     })
 
 

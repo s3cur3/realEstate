@@ -64,7 +64,7 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
         this.getLoanAmount = function(property) {
             return _this.getAllIn(property) - _this.getDownPayment(property);
         };
-        this.getLoanPayment = function(property) {
+        this.getLoanPayment = function(property) { // monthly
             return ExcelFormulas.PMT(property.loan.interestRate/100/12, property.loan.termYears*12, -_this.getLoanAmount(property));
         };
         this.getPITI = function(p) {
