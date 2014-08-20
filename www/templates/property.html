@@ -10,89 +10,47 @@
     <ion-content class="has-header">
         <h1 class="content-pad">Property Info</h1>
         <div class="list small-number-inputs">
-            <div class="item item-divider">
-                Basic Info
-            </div>
-            <label class="item item-input">
-                <span class="input-label">Property Name</span>
-                <input type="text" ng-model="property.name">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Street Address</span>
-                <input type="text" ng-model="property.streetAddress">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">City</span>
-                <input type="text" ng-model="property.city">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">State</span>
-                <input type="text" ng-model="property.state">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Zip</span>
-                <input type="number" ng-model="property.zip">
-            </label>
-            <div class="item item-divider">
-                Expenses
-            </div>
-            <label class="item item-input">
-                <span class="input-label">Purchase Price</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.purchasePrice">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Repairs & Improvements</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.repairsAndImprovements">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Total All In</span>
-                <span class="simulate-input" id="allInPrice">{{property.purchasePrice+property.repairsAndImprovements | currency}}</span>
-            </label>
-            <div class="item item-divider">
-                Value
-            </div>
-            <label class="item item-input">
-                <span class="input-label">Est. Appraised Value</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.appraisedValue">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Est. Quick Sale Value</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.quickSaleValue">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Investor Discount/Profit</span>
-                <input type="number" class="right" ng-model="property.investorDiscount"><span class="input-units">%</span>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Prior Year County Appraised Value</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.priorAppraisedValue">
-            </label>
-            <div class="item item-divider">
-                Taxes
-            </div>
-            <label class="item item-input">
-                <span class="input-label">Prior Year Property Tax</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.priorPropertyTax">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Est. Property Tax Increase</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.propertyTaxIncrease">
-            </label>
-            <div class="item item-divider">
-                Miscellaneous (needs organizing)
-            </div>
-            <label class="item item-input">
-                <span class="input-label">Total square footage</span>
-                <input type="number" class="right" ng-model="property.squareFootage">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Annual Insurance Cost</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.insuranceCost">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Gross Monthly Rental Income</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="property.insuranceCost">
-            </label>
+            <group label="Basic Info">
+                <text-field label="Property Name" ng-model="property.basics.name"></text-field>
+                <text-field label="Street Address" ng-model="property.basics.streetAddress"></text-field>
+                <text-field label="City" ng-model="property.basics.city"></text-field>
+                <text-field label="State" ng-model="property.basics.state"></text-field>
+                <text-field label="Zip" ng-model="property.basics.zip"></text-field>
+                <number-field label="Total Square Footage" ng-model="property.basics.squareFootage"></number-field>
+            </group>
+            <group label="Initial Cost">
+                <number-field label="Purchase Price" ng-model="property.initial.purchasePrice" prefix="$"></number-field>
+                <number-field label="Repairs & Improvements" ng-model="property.initial.repairsAndImprovements" prefix="$"></number-field>
+                <calculated-field label="Total All In">{{property.initial.purchasePrice+property.initial.repairsAndImprovements | currency}}</calculated-field>
+            </group>
+            <group label="Value" id="sale-value-pro" ng-show="appVersion != version.basic">
+                <number-field label="Est. Appraised Value" ng-model="property.value.appraisedValue" prefix="$"></number-field>
+                <number-field label="Est. Quick Sale Value" ng-model="property.value.quickSaleValue" prefix="$"></number-field>
+                <number-field label="Investor Discount/Profit" ng-model="property.value.investorDiscount" suffix="%"></number-field>
+                <number-field label="Prior Year County Appraised Value" ng-model="property.value.priorAppraisedValue" prefix="$"></number-field>
+            </group >
+            <group label="Value" id="sale-value-basc" ng-show="appVersion === version.basic">
+                <number-field label="Est. Appraised Value" ng-model="property.value.appraisedValue" prefix="$"></number-field>
+            </group>
+            <group  label="Loan Information" id="loan-info">
+                <number-field label="Interest Rate" ng-model="property.loan.interestRate" suffix="%"></number-field>
+                <number-field label="Term of Loan" ng-model="property.loan.termYears" suffix="years"></number-field>
+                <number-field label="Down Payment" ng-model="property.loan.downPaymentPercent" suffix="%"></number-field>
+            </group >
+            <group label="Income">
+                <number-field label="Gross Monthly Rental Income" ng-model="property.income.grossMonthlyRentalIncome" prefix="$"></number-field>
+                <number-field label="Other Monthly Income" ng-model="property.income.otherMonthlyIncome" prefix="$"></number-field>
+                <number-field label="Vacancy Rate Loss" ng-model="property.expenses.vacancyRateLoss" suffix="%"></number-field>
+                <calculated-field label="Gross Operating Income (Annual)">{{ calc.getGrossAnnualOperatingIncome(property) | currency}}</calculated-field>
+            </group>
+            <group label="Expenses">
+                <number-field label="Annual Property Tax" ng-model="property.expenses.annualPropertyTax" prefix="$"></number-field>
+                <number-field label="Annual Insurance" ng-model="property.expenses.annualInsurance" prefix="$"></number-field>
+                <number-field label="Property Management Fee" ng-model="property.expenses.propertyManagementPercent" suffix="%"></number-field>
+                <number-field label="Maintenance Factor" ng-model="property.expenses.maintenancePercent" suffix="%"></number-field>
+                <number-field label="Misc. Monthly Expenses" ng-model="property.expenses.miscMonthlyExpenses" prefix="$"></number-field>
+                <calculated-field label="Total Expenses (Annual)">{{ calc.getAnnualExpenses(property) | currency}}</calculated-field>
+            </group>
             <a class="item button button-full button-positive" href="/#/app/properties/{{property.id}}/analysis">
                 Get property analysis
             </a>
