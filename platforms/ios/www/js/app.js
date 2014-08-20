@@ -25,33 +25,76 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
         var _this = this;
 
         // Loan
-        this.getLoanAmount = function(property) {
-            return property.purchasePrice;
+        this.getAllIn = function(property) {
+            return property.initial.purchasePrice+property.initial.repairsAndImprovements;
         };
 
         // Income
+        this.getGrossAnnualOperatingIncome = function(property) {
+            var monthlyIncome = (property.income.grossMonthlyRentalIncome || 0) + (property.income.otherMonthlyIncome || 0); // protection against NaN
+            var monthlyLoss = (property.income.grossMonthlyRentalIncome || 0) * (property.expenses.vacancyRateLoss || 0)/100;
+            return monthlyIncome*12 - (monthlyLoss*12);
+        };
+        this.getGrossOperatingIncome = function(p) { // monthly
+            return _this.getGrossAnnualOperatingIncome(p)/12;
+        };
+        /*
         this.getNetAnnualOperatingIncome = function(property) {
             return property.totalAnnualOperatingIncome - property.totalAnnualOperatingExpenses;
-        };
+        };*/
 
         // Expenses
+        this.getAnnualExpenses = function(property) {
+            var tax = property.expenses.annualPropertyTax || 0;
+            var insurance = property.expenses.annualInsurance || 0;
+            var expenses = (property.expenses.miscMonthlyExpenses || 0)*12;
+            var management = (property.income.grossMonthlyRentalIncome || 0) * (property.expenses.propertyManagementPercent || 0)/100 * 12;
+            var maintenance = (property.income.grossMonthlyRentalIncome || 0) * (property.expenses.maintenancePercent || 0)/100 * 12;
+            return tax + insurance + expenses + management + maintenance;
+        };
+        this.getTotalOperatingExpenses = function(p) { // monthly
+            return _this.getAnnualExpenses(p)/12;
+        };
         this.getTotalCashOutlay = function(property) { return 2405.00 };
+
+        // Financing
+        this.getDownPayment = function(property) {
+            return _this.getAllIn(property) * property.loan.downPaymentPercent/100
+        };
+        this.getLoanAmount = function(property) {
+            return _this.getAllIn(property) - _this.getDownPayment(property);
+        };
+        this.getLoanPayment = function(property) { // monthly
+            return ExcelFormulas.PMT(property.loan.interestRate/100/12, property.loan.termYears*12, -_this.getLoanAmount(property));
+        };
+        this.getPITI = function(p) {
+            return _this.getLoanPayment(p) + (p.expenses.annualInsurance/12) + (p.expenses.annualPropertyTax/12);
+        };
+
+        // Pro forma
+        this.getDebtService = function(property) { // monthly
+            return -_this.getLoanPayment(property);
+        };
+        this.getNetOperatingIncome = function(p) { // monthly
+            return _this.getGrossOperatingIncome(p) - _this.getTotalOperatingExpenses(p);
+        };
 
         // Investment stats
         this.getCapRate = function(property) {
-            return _this.getNetAnnualOperatingIncome(property) / property.purchasePrice;
+            return _this.getGrossAnnualOperatingIncome(property) / _this.getAllIn(property);
         };
         this.getCashFlow = function(property) {
-            return 257.03;
+            return _this.getNetOperatingIncome(property) + _this.getDebtService(property);
         };
         this.getDSCR = function(property) {
+            console.error("Implement getDSCR()");
             return 1.34;
         };
-        this.getGRM = function(property) {
-            return 4.95;
+        this.getGRM = function(p) {
+            return _this.getAllIn(p)/ (p.income.grossMonthlyRentalIncome*12);
         };
         this.getLTV = function(property) {
-            return _this.getLoanAmount(property) / property.appraisedValue;
+            return _this.getLoanAmount(property) / property.value.appraisedValue;
         };
     })
 
@@ -59,19 +102,42 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
         var _Property = function() {
             return {
                 id: _this._getNextID(),
-                name: "New property",
+                basics: {
+                    name: "New property"
+                },
 
-                purchasePrice: 63000,
-                repairsAndImprovements: 500,
-                appraisedValue: 85000,
+                initial: {
+                    purchasePrice: 0,
+                    repairsAndImprovements: 0
+                },
+                value: {
+                    appraisedValue: 0
+                },
 
                 // Income
-                totalAnnualOperatingIncome: 12186.60,
+                income : {
+                    grossMonthlyRentalIncome: 0,
+                    otherMonthlyIncome: 0
+                },
+                totalAnnualOperatingIncome: 0,
 
                 // Expenses
-                totalAnnualOperatingExpenses: 2672.00
+                expenses: {
+                    vacancyRateLoss: 10,
+                    annualPropertyTax: 0,
+                    annualInsurance: 0,
+                    propertyManagementPercent: 0,
+                    maintenancePercent: 10,
+                    miscMonthlyExpenses: 0
+                },
+                totalAnnualOperatingExpenses: 2672.00,
 
                 // Investment stats
+                loan: {
+                    interestRate: 6.0,
+                    termYears: 15,
+                    downPaymentPercent: 20
+                }
             }
         };
 
@@ -289,10 +355,92 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 }
             })
 
+            .state('app.financing', {
+                url: "/properties/:propertyId/financing",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/financing.html",
+                        controller: 'FinancingCtrl'
+                    }
+                }
+            })
+
+            .state('app.proForma', {
+                url: "/properties/:propertyId/pro-forma",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/pro-forma.html",
+                        controller: 'ProFormaCtrl'
+                    }
+                }
+            })
+
         ;
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/properties');
-    });
+    })
+
+    .directive('group', function() {
+        return {
+            restrict: 'E', // must be an HTML element
+            transclude: true,
+            replace: true,
+            scope: { label: '@' },
+            template: '<section><div class="item item-divider">{{label}}</div><div ng-transclude></group>'
+        };
+    })
+    .directive('numberField', function() {
+        return {
+            restrict: 'E', // must be an HTML element
+            replace: true,
+            scope: {
+                label: '@',
+                prefix: '@',
+                suffix: '@',
+                model: '=ngModel'
+            },
+            template:
+                '<label class="input-number item item-input">' +
+                    '<span class="input-label">{{label}}</span>' +
+                    '<span class="input-units prefix">{{prefix}}</span><input type="number" class="right" ng-model="model"><span class="input-units suffix">{{suffix}}</span>' +
+                '</number-field>'
+        };
+    })
+    .directive('textField', function() {
+        return {
+            restrict: 'E', // must be an HTML element
+            replace: true,
+            transclude: true,
+            scope: {
+                label: '@',
+                model: '=ngModel'
+            },
+            template:
+                '<label class="input-text item item-input">' +
+                    '<span class="input-label">{{label}}</span>' +
+                    '<input type="text" ng-model="model">' +
+                '</input-text>'
+        };
+    })
+    .directive('calculatedField', function() {
+        return {
+            restrict: 'E', // must be an HTML element
+            replace: true,
+            transclude: true,
+            scope: {
+                label: '@',
+                prefix: '@',
+                suffix: '@',
+                model: '=ngModel'
+            },
+            template:
+                '<label class="input-number item item-input">' +
+                    '<span class="input-label">{{label}}</span>' +
+                    '<span class="simulate-input" id="allInPrice"><div ng-transclude></span>' +
+                '</calculated-field>'
+        };
+    })
+;
 
 
 angular.module('RealEstateFilters', [])

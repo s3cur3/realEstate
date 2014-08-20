@@ -3,7 +3,7 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-content class="has-header" id="pro-forma">
-        <a class="item button button-full button-positive" ng-click="renderPDF()">
+        <a class="item button button-full button-positive" ng-click="renderPDF()" ng-show="false">
             Save as PDF
         </a>
         <h1 class="content-pad">Pro Forma</h1>
@@ -68,6 +68,8 @@
                 {{calc.getLoanPayment(property) | currency}}
             </calculated-field>
         </group>
+        <div class="item spacer">
+        </div>
     </ion-content>
 
 </ion-view>

@@ -25,7 +25,7 @@ angular.module('RealEstateApp.controllers', [])
                 return $scope.calc.getCapRate( $scope.property ) * 100 >= $scope.criteria.capRate;
             },
             cashFlowGood: function() {
-                return $scope.calc.getCashFlow( $scope.property ) * 100 >= $scope.criteria.cashFlow;
+                return $scope.calc.getCashFlow( $scope.property ) >= $scope.criteria.cashFlow;
             },
             dscrGood: function() {
                 return $scope.calc.getDSCR( $scope.property ) > $scope.criteria.dscr;
@@ -71,10 +71,11 @@ angular.module('RealEstateApp.controllers', [])
 
 
     .controller('CriteriaCtrl', function($scope) {
-
+        console.log("In CriteriaCtrl");
     })
 
     .controller('PropertiesCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
+        console.log("In PropertiesCtrl");
         $scope.properties = PropertyService.allProperties();
         if( $scope.properties.length == 0 ) {
             $scope.property = PropertyService.newProperty();
@@ -94,27 +95,63 @@ angular.module('RealEstateApp.controllers', [])
     }])
 
     .controller('PropertyCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
+        console.log("In PropertyCtrl");
+
         // Update the currently-in-use property when we load this one
         var re = /[0-9]+$/;
         var id = $location.url().match(re);
         $scope.selectProperty( PropertyService.getPropertyByID(id) );
 
         // Update the master property list whenever we modify this property
-        console.log("Setting watch...");
-        $scope.$watch('property.basic', function(updatedProperty, oldProperty) { // TODO: This may be computationally intensive!
+        $scope.$watch('property', function(updatedProperty, oldProperty) {
             if( typeof updatedProperty == "object" && updatedProperty ) {
                 PropertyService.save(updatedProperty);
-                console.log("Updated property");
                 $scope.properties = PropertyService.allProperties();
-            }
-            else {
-                console.log("Got empty property from update...?");
+            } else {
+                console.log("Got empty property in an update...?");
             }
         }, true);
+
     }])
 
     .controller('AnalysisCtrl', function($scope) {
+        console.log("In AnalysisCtrl");
 
+    })
+
+    .controller('FinancingCtrl', function($scope) {
+        console.log("In FinancingCtrl");
+
+    })
+
+    .controller('ProFormaCtrl', function($scope) {
+        console.log("In ProFormaCtrl");
+
+
+        $scope.renderPDF = function() {
+            var doc = new jsPDF();
+
+            // We'll make our own renderer to skip this editor
+            var specialElementHandlers = {
+                '.button': function(element, renderer){
+                    return true;
+                }
+            };
+
+            // All units are in the set measurement for the document
+            // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
+            doc.fromHTML(
+                document.getElementById('pro-forma')[0], // ID to turn into a PDF
+                15, // x coord
+                15, // y coord
+                {
+                    'width': 170,
+                    'elementHandlers': specialElementHandlers
+                }
+            );
+
+            doc.save('Pro Forma.pdf');
+        }
     })
 
 

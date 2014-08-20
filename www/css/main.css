@@ -1,0 +1,60 @@
+
+p, div {
+    font-size: 16px;
+}
+
+input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], textarea {
+    font-size: 16px;
+}
+
+
+/** Forms **/
+.right {
+  text-align: right;
+}
+.input-units {
+  width: 25px;
+}
+.right+.input-units {
+  padding-right: 15px;
+}
+
+.list .input-label {
+  max-width: inherit;
+}
+.list .item-input input {
+  padding-right: 2px;
+}
+.simulate-input {
+  padding-right: 10px;
+}
+.list.small-number-inputs .item-input input[type="number"] {
+  max-width: 100px;
+  width: 100px;
+}
+
+
+/** Lists **/
+.spacer {
+  border: none;
+  height: 40px;
+}
+
+/** Buttons **/
+.button.dangerous {
+    font-size: 95%;
+    min-height: 35px;
+}
+
+/** Content wrappers **/
+.content-pad {
+  padding: 16px;
+}
+
+
+
+/** Utility classes **/
+.text-center {
+  text-align: center;
+}
+
