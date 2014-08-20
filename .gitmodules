@@ -1,0 +1,3 @@
+[submodule "www/lib/enums"]
+	path = www/lib/enums
+	url = https://github.com/rauschma/enums.git
