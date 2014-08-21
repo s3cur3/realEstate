@@ -389,7 +389,7 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
             template: '<section><div class="item item-divider">{{label}}</div><div ng-transclude></group>'
         };
     })
-    .directive('numberField', function() {
+    .directive('numberField', function($compile) {
         return {
             restrict: 'E', // must be an HTML element
             replace: true,
@@ -397,12 +397,14 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 label: '@',
                 prefix: '@',
                 suffix: '@',
-                model: '=ngModel'
+                model: '=ngModel',
+                isEditable: '&'
             },
             template:
-                '<label class="input-number item item-input">' +
+                '<label class="input-number item item-input" ng-click="$parent.makeEditable(label)">' +
                     '<span class="input-label">{{label}}</span>' +
-                    '<span class="input-units prefix">{{prefix}}</span><input type="number" class="right" ng-model="model"><span class="input-units suffix">{{suffix}}</span>' +
+                    '<span ng-show="!$parent.isEditable(label)">{{prefix}}{{model}} {{suffix}}</span>' +
+                    '<input ng-show="$parent.isEditable(label)" ng-blur="$parent.clearEditable(label)" type="number" class="right" ng-model="model">' +
                 '</number-field>'
         };
     })

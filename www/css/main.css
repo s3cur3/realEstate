@@ -18,6 +18,9 @@ input[type=color], input[type=date], input[type=datetime-local], input[type=date
 .right+.input-units {
   padding-right: 15px;
 }
+.input-units.prefix {
+    text-align: right;
+}
 
 .list .input-label {
   max-width: inherit;
@@ -57,4 +60,6 @@ input[type=color], input[type=date], input[type=datetime-local], input[type=date
 .text-center {
   text-align: center;
 }
+
+
 

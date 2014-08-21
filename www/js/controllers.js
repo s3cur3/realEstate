@@ -66,7 +66,19 @@ angular.module('RealEstateApp.controllers', [])
         };
         $scope.closeDelete = function() {
             $scope.deleteModal.hide();
-        }
+        };
+
+        $scope.makeEditable = function(labelForField) {
+            $scope.editable = labelForField;
+        };
+        $scope.isEditable = function(labelForField) {
+            return $scope.editable === labelForField;
+        };
+        $scope.clearEditable = function(label) {
+            if($scope.editable == label) // Don't touch it if this field isn't being edited currently!
+                $scope.editable = null;
+        };
+
     }])
 
 
