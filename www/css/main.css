@@ -1,4 +1,10 @@
 
+h1.content-pad {
+    padding-top: 0;
+    padding-bottom: 8px;
+    font-size: 30px;
+}
+
 p, div {
     font-size: 16px;
 }
@@ -57,7 +63,6 @@ input[type=text].item-field {
 
 /** Lists **/
 .spacer {
-  border: none;
   height: 40px;
 }
 
@@ -80,4 +85,33 @@ input[type=text].item-field {
 }
 
 
+
+
+
+
+
+
+
+/** Color **/
+/*
+Carrot: #e67e22
+Wet asphalt: #34495e
+*/
+h1 {
+    color: #34495e;
+}
+.bar.bar-stable {
+    border-bottom-width: 2px;
+    border-bottom-color: #34495e;
+}
+.bar.bar-stable, .bar.bar-stable .title {
+    color: #34495e;
+}
+.item-divider {
+    color: #fff;
+    background-color: #34495e;
+}
+.simulate-input, .simulate-input-container {
+    font-weight: bold;
+}
 
