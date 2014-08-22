@@ -19,7 +19,7 @@ function hideOrShowBackBtn() {
 
 angular.module('RealEstateApp.controllers', [])
 
-    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', function( $scope, $location, $ionicModal, PropertyService, CalculatorService ) {
+    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', 'CriteriaService', function( $scope, $location, $ionicModal, PropertyService, CalculatorService, CriteriaService ) {
         // Set up property functionality
         $scope.propertyService = PropertyService;
         $scope.properties = PropertyService.allProperties();
@@ -27,13 +27,7 @@ angular.module('RealEstateApp.controllers', [])
 
         $scope.calc = CalculatorService;
 
-        $scope.criteria = {
-            capRate: 12,
-            cashFlow: 250,
-            grm: 7,
-            dscr: 1.3,
-            ltv: 75
-        };
+        $scope.criteria = CriteriaService.allCriteria();
 
         $scope.selectProperty = function(prop, index) {
             $scope.property = prop;
@@ -75,6 +69,7 @@ angular.module('RealEstateApp.controllers', [])
             $scope.deleteModal = modal;
         });
 
+        // Tools for deleting a property
         $scope.delete = function(p) {
             $scope.propertyToDelete = p;
             $scope.deleteModal.show();
@@ -88,6 +83,7 @@ angular.module('RealEstateApp.controllers', [])
             $scope.deleteModal.hide();
         };
 
+        // Flags for dealing with editable text fields
         $scope.makeEditable = function(labelForField) {
             $scope.editable = labelForField;
         };
@@ -99,13 +95,33 @@ angular.module('RealEstateApp.controllers', [])
                 $scope.editable = null;
         };
 
+        // Update the master property list whenever we modify this property
+        $scope.$watch('property', function(updatedProperty, oldProperty) {
+            if( typeof updatedProperty == "object" && updatedProperty ) {
+                PropertyService.save(updatedProperty);
+                $scope.properties = PropertyService.allProperties();
+            } else {
+                console.log("Got empty property in an update...?");
+            }
+        }, true);
+
+        // Update the master criteria list whenever we modify this property
+        $scope.$watch('criteria', function(updatedCriteria, oldCriteria) {
+            if( typeof updatedCriteria == "object" && updatedCriteria ) {
+                console.log("Saving criteria:", updatedCriteria);
+                CriteriaService.save(updatedCriteria);
+                $scope.criteria = CriteriaService.allCriteria();
+            } else {
+                console.error("Got empty criteria list in an update...?");
+            }
+        }, true);
     }])
 
 
-    .controller('CriteriaCtrl', function($scope) {
+    .controller('CriteriaCtrl', ['$scope', 'CriteriaService', function($scope, CriteriaService) {
         console.log("In CriteriaCtrl");
         hideOrShowBackBtn();
-    })
+    }])
 
     .controller('PropertiesCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
         console.log("In PropertiesCtrl");
@@ -126,7 +142,6 @@ angular.module('RealEstateApp.controllers', [])
             console.log("Setting path to " + '/properties/' + PropertyService.getLastActiveIndex());
             $location.path('/#/properties/' + PropertyService.getLastActiveIndex());
         }
-
     }])
 
     .controller('PropertyCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
@@ -137,17 +152,6 @@ angular.module('RealEstateApp.controllers', [])
         var re = /[0-9]+$/;
         var id = $location.url().match(re);
         $scope.selectProperty( PropertyService.getPropertyByID(id) );
-
-        // Update the master property list whenever we modify this property
-        $scope.$watch('property', function(updatedProperty, oldProperty) {
-            if( typeof updatedProperty == "object" && updatedProperty ) {
-                PropertyService.save(updatedProperty);
-                $scope.properties = PropertyService.allProperties();
-            } else {
-                console.log("Got empty property in an update...?");
-            }
-        }, true);
-
     }])
 
     .controller('AnalysisCtrl', function($scope) {

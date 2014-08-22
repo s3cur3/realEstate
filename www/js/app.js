@@ -304,6 +304,41 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
         var _this = this;
     })
 
+    .service('CriteriaService', function() {
+        var _Criteria = function() {
+            return {
+                capRate: 12,
+                cashFlow: 250,
+                grm: 7,
+                dscr: 1.3,
+                ltv: 75
+            }
+        };
+
+        this.allCriteria = function() {
+            // TODO: This is RIDICULOUSLY inefficient --- it's called all the damn time!
+            var criteriaString = window.localStorage['criteria'];
+            if( criteriaString ) {
+                var criteria = angular.fromJson(criteriaString);
+
+                if( typeof criteria !== "object" ) {
+                    return new _Criteria();
+                }
+
+                return criteria;
+            } else {
+                return new _Criteria();
+            }
+        };
+
+        this.save = function( criteria ) {
+            assert(typeof criteria === "object", "Got non-object Criteria");
+
+            // TODO: make this more efficient?
+            window.localStorage['criteria'] = angular.toJson(criteria);
+        };
+    })
+
     // Define our routes
     .config(function( $stateProvider, $urlRouterProvider ) {
         $stateProvider
