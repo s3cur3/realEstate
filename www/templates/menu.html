@@ -13,11 +13,11 @@
         <ion-content class="has-header">
             <ion-list>
                 <ion-item nav-clear menu-close href="#/app/criteria" class="item-icon-left">
-                    <i class="icon ion-gear-a"></i>
+                    <i class="icon ion-ios7-gear"></i>
                     Investment Criteria
                 </ion-item>
                 <ion-item nav-clear menu-close href="#/app/properties" class="item-icon-left">
-                    <i class="icon ion-home"></i>
+                    <i class="icon ion-ios7-home"></i>
                     Properties
                 </ion-item>
                 <div class="item spacer">
@@ -28,22 +28,18 @@
                         {{property.basics.name}}
                     </ion-item>
                     <ion-item nav-clear menu-close href="#/app/properties/{{propertyService.getLastActiveIndex() + 1}}/analysis" class="item-icon-left">
-                        <i class="icon" ng-class="{'ion-close-circled assertive': !greenLight(), 'ion-checkmark-circled balanced': greenLight()}"></i>
+                        <i class="icon" ng-class="{'ion-thumbsdown': !greenLight(), 'ion-thumbsup': greenLight()}"></i>
                         Analysis
                     </ion-item>
                     <ion-item nav-clear menu-close href="#/app/properties/{{propertyService.getLastActiveIndex() + 1}}/financing" class="item-icon-left">
-                        <i class="icon ion-cash"></i><!-- ion-briefcase? -->
+                        <i class="icon ion-ios7-briefcase"></i><!-- ion-briefcase? ion-cash? -->
                         Financing
                     </ion-item>
                     <ion-item nav-clear menu-close href="#/app/properties/{{propertyService.getLastActiveIndex() + 1}}/pro-forma" class="item-icon-left">
-                        <i class="icon ion-document-text"></i>
+                        <i class="icon ion-ios7-copy"></i><!-- ion-document-text? -->
                         Pro Forma
                     </ion-item>
                 </group>
-                <!--<ion-item nav-clear menu-close href="#/app/property/analysis" class="item-icon-left">
-                    <i class="icon" ng-class="{'ion-close-circled': !greenLight(), 'ion-checkmark-circled': greenLight()}"></i>
-                    Property Analysis
-                </ion-item>-->
             </ion-list>
         </ion-content>
     </ion-side-menu>

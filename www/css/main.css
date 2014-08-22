@@ -92,26 +92,52 @@ input[type=text].item-field {
 
 
 
+/** Fix for tablets **/
+@media (min-width: 767px) {
+    .menu-content {
+        -webkit-transform: translate3d(270px, 0px, 0px) !important;
+        width: calc(100% - 270px) !important;
+    }
+
+    .bar-header button.ion-navicon {
+        display: none;
+    }
+}
+
+
+
 
 
 /** Color **/
 /*
 Carrot: #e67e22
-Wet asphalt: #34495e
+Wet asphalt (dark blue): #34495e
+Peter river (blue): #3498db
+Alizarin (red): #e74c3c
 */
 h1 {
     color: #34495e;
 }
 .bar.bar-stable {
     border-bottom-width: 2px;
-    border-bottom-color: #34495e;
+    border-bottom-color: #3498db;
 }
 .bar.bar-stable, .bar.bar-stable .title {
-    color: #34495e;
+    color: #3498db;
+}
+/*
+.positive {
+    color: #3498db;
+}
+.button.button-positive {
+    background-color: #3498db;
+}*/
+.assertive {
+    color: #e74c3c;
 }
 .item-divider {
     color: #fff;
-    background-color: #34495e;
+    background-color: #3498db;
 }
 .simulate-input, .simulate-input-container {
     font-weight: bold;

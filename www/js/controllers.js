@@ -29,33 +29,42 @@ angular.module('RealEstateApp.controllers', [])
 
         $scope.criteria = CriteriaService.allCriteria();
 
+        $scope.makePropertiesListComplex = true;
+
         $scope.selectProperty = function(prop, index) {
             $scope.property = prop;
             PropertyService.setLastActiveIndex(index || prop);
         };
 
         $scope.analysis = {
-            capRateGood: function() {
-                return $scope.calc.getCapRate( $scope.property ) * 100 >= $scope.criteria.capRate;
+            capRateGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getCapRate(p) * 100 >= $scope.criteria.capRate;
             },
-            cashFlowGood: function() {
-                return $scope.calc.getCashFlow( $scope.property ) >= $scope.criteria.cashFlow;
+            cashFlowGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getCashFlow(p) >= $scope.criteria.cashFlow;
             },
-            dscrGood: function() {
-                return $scope.calc.getDSCR( $scope.property ) > $scope.criteria.dscr;
+            dscrGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getDSCR(p) > $scope.criteria.dscr;
             },
-            grmGood: function() {
-                return $scope.calc.getGRM( $scope.property ) < $scope.criteria.grm;
+            grmGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getGRM(p) < $scope.criteria.grm;
             },
-            ltvGood: function() {
-                return $scope.calc.getLTV( $scope.property ) * 100 < $scope.criteria.ltv;
+            ltvGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getLTV(p) * 100 < $scope.criteria.ltv;
             }
         };
 
-        $scope.greenLight = function() {
+        $scope.greenLight = function(p) {
+            if(!p) p = $scope.property;
+
             var giveGreenLight = true;
             for( var fn in $scope.analysis ) {
-                giveGreenLight &= $scope.analysis[fn]();
+                giveGreenLight &= $scope.analysis[fn](p);
             }
             return giveGreenLight;
         };
