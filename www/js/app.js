@@ -401,10 +401,10 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 isEditable: '&'
             },
             template:
-                '<label class="input-number item item-input" ng-click="$parent.makeEditable(label)">' +
-                    '<span class="input-label">{{label}}</span>' +
-                    '<span ng-show="!$parent.isEditable(label)">{{prefix}}{{model}} {{suffix}}</span>' +
-                    '<input ng-show="$parent.isEditable(label)" ng-blur="$parent.clearEditable(label)" type="number" class="right" ng-model="model">' +
+                '<label class="item" ng-click="$parent.makeEditable(label)">' +
+                    '{{label}}' +
+                    '<span class="item-field" ng-show="!$parent.isEditable(label)">{{prefix}}{{model}} {{suffix}}</span>' +
+                    '<input class="item-field" ng-show="$parent.isEditable(label)" ng-blur="$parent.clearEditable(label)" type="number" class="right" ng-model="model">' +
                 '</number-field>'
         };
     })
@@ -418,9 +418,9 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 model: '=ngModel'
             },
             template:
-                '<label class="input-text item item-input">' +
-                    '<span class="input-label">{{label}}</span>' +
-                    '<input type="text" ng-model="model">' +
+                '<label class="input-text item">' +
+                    '{{label}}' +
+                    '<input type="text" ng-model="model" class="item-field">' +
                 '</input-text>'
         };
     })
@@ -436,9 +436,9 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 model: '=ngModel'
             },
             template:
-                '<label class="input-number item item-input">' +
-                    '<span class="input-label">{{label}}</span>' +
-                    '<span class="simulate-input" id="allInPrice"><div ng-transclude></span>' +
+                '<label class="input-number item simulate-input-container">' +
+                    '{{label}}' +
+                    '<span class="simulate-input item-field" id="allInPrice"><div ng-transclude></span>' +
                 '</calculated-field>'
         };
     })

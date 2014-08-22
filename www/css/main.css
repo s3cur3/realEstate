@@ -12,9 +12,6 @@ input[type=color], input[type=date], input[type=datetime-local], input[type=date
 .right {
   text-align: right;
 }
-.input-units {
-  width: 25px;
-}
 .right+.input-units {
   padding-right: 15px;
 }
@@ -25,15 +22,36 @@ input[type=color], input[type=date], input[type=datetime-local], input[type=date
 .list .input-label {
   max-width: inherit;
 }
-.list .item-input input {
-  padding-right: 2px;
-}
 .simulate-input {
-  padding-right: 10px;
+    padding-right: 10px;
 }
-.list.small-number-inputs .item-input input[type="number"] {
-  max-width: 100px;
-  width: 100px;
+
+.item .item-field {
+    float: right;
+}
+input[type=number].item-field {
+    max-width: 5em;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 0 220px;
+    -moz-box-flex: 1;
+    -moz-flex: 1 0 220px;
+    -ms-flex: 1 0 220px;
+    flex: 1 0 220px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+    height: 1.5em;
+    background-color: transparent;
+}
+
+input[type=text].item-field {
+    max-width: 50%;
+    text-align: right;
+    height: 1.5em;
 }
 
 
