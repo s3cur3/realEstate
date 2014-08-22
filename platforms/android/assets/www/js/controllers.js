@@ -2,6 +2,7 @@ angular.module('RealEstateApp.controllers', [])
 
     .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', function( $scope, $location, $ionicModal, PropertyService, CalculatorService ) {
         // Set up property functionality
+        $scope.propertyService = PropertyService;
         $scope.properties = PropertyService.allProperties();
         $scope.property = $scope.properties[ PropertyService.getLastActiveIndex() ];
 
@@ -66,7 +67,19 @@ angular.module('RealEstateApp.controllers', [])
         };
         $scope.closeDelete = function() {
             $scope.deleteModal.hide();
-        }
+        };
+
+        $scope.makeEditable = function(labelForField) {
+            $scope.editable = labelForField;
+        };
+        $scope.isEditable = function(labelForField) {
+            return $scope.editable === labelForField;
+        };
+        $scope.clearEditable = function(label) {
+            if($scope.editable == label) // Don't touch it if this field isn't being edited currently!
+                $scope.editable = null;
+        };
+
     }])
 
 
@@ -116,17 +129,24 @@ angular.module('RealEstateApp.controllers', [])
 
     .controller('AnalysisCtrl', function($scope) {
         console.log("In AnalysisCtrl");
-
     })
 
     .controller('FinancingCtrl', function($scope) {
         console.log("In FinancingCtrl");
-
     })
 
     .controller('ProFormaCtrl', function($scope) {
         console.log("In ProFormaCtrl");
 
+        var backBtn = document.querySelector(".back-button");
+        var menuBtn = document.querySelector('.menu-button');
+        if( backBtn ) {
+            console.log("back btn found");
+            angular.element(menuBtn).addClass('hidden');
+        } else {
+            console.log("no back btn found");
+            angular.element(menuBtn).removeClass('hidden');
+        }
 
         $scope.renderPDF = function() {
             var doc = new jsPDF();

@@ -389,7 +389,7 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
             template: '<section><div class="item item-divider">{{label}}</div><div ng-transclude></group>'
         };
     })
-    .directive('numberField', function() {
+    .directive('numberField', function($compile) {
         return {
             restrict: 'E', // must be an HTML element
             replace: true,
@@ -397,12 +397,14 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 label: '@',
                 prefix: '@',
                 suffix: '@',
-                model: '=ngModel'
+                model: '=ngModel',
+                isEditable: '&'
             },
             template:
-                '<label class="input-number item item-input">' +
-                    '<span class="input-label">{{label}}</span>' +
-                    '<span class="input-units prefix">{{prefix}}</span><input type="number" class="right" ng-model="model"><span class="input-units suffix">{{suffix}}</span>' +
+                '<label class="item" ng-click="$parent.makeEditable(label)">' +
+                    '{{label}}' +
+                    '<span class="item-field" ng-show="!$parent.isEditable(label)">{{prefix}}{{model}} {{suffix}}</span>' +
+                    '<input class="item-field" ng-show="$parent.isEditable(label)" ng-blur="$parent.clearEditable(label)" type="number" class="right" ng-model="model">' +
                 '</number-field>'
         };
     })
@@ -416,9 +418,9 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 model: '=ngModel'
             },
             template:
-                '<label class="input-text item item-input">' +
-                    '<span class="input-label">{{label}}</span>' +
-                    '<input type="text" ng-model="model">' +
+                '<label class="input-text item">' +
+                    '{{label}}' +
+                    '<input type="text" ng-model="model" class="item-field">' +
                 '</input-text>'
         };
     })
@@ -434,9 +436,9 @@ angular.module('RealEstateApp', ['ionic', 'RealEstateApp.controllers', 'RealEsta
                 model: '=ngModel'
             },
             template:
-                '<label class="input-number item item-input">' +
-                    '<span class="input-label">{{label}}</span>' +
-                    '<span class="simulate-input" id="allInPrice"><div ng-transclude></span>' +
+                '<label class="input-number item simulate-input-container">' +
+                    '{{label}}' +
+                    '<span class="simulate-input item-field" id="allInPrice"><div ng-transclude></span>' +
                 '</calculated-field>'
         };
     })

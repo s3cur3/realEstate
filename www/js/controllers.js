@@ -1,3 +1,22 @@
+function hideOrShowBackBtn() {
+    function hideOrShowBackBtnNonRecursive() {
+        var backBtnVisible = $(".back-button").is(":visible");
+        var menuBtn = $('.buttons.left-buttons');
+        if( backBtnVisible ) {
+            console.log("back btn found");
+            menuBtn.hide();
+        } else {
+            console.log("no back btn found");
+            menuBtn.show();
+        }
+    }
+
+    hideOrShowBackBtnNonRecursive();
+    window.setTimeout(hideOrShowBackBtnNonRecursive, 50);
+    window.setTimeout(hideOrShowBackBtnNonRecursive, 100);
+    window.setTimeout(hideOrShowBackBtnNonRecursive, 300);
+}
+
 angular.module('RealEstateApp.controllers', [])
 
     .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', function( $scope, $location, $ionicModal, PropertyService, CalculatorService ) {
@@ -85,10 +104,13 @@ angular.module('RealEstateApp.controllers', [])
 
     .controller('CriteriaCtrl', function($scope) {
         console.log("In CriteriaCtrl");
+        hideOrShowBackBtn();
     })
 
     .controller('PropertiesCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
         console.log("In PropertiesCtrl");
+        hideOrShowBackBtn();
+
         $scope.properties = PropertyService.allProperties();
         if( $scope.properties.length == 0 ) {
             $scope.property = PropertyService.newProperty();
@@ -109,6 +131,7 @@ angular.module('RealEstateApp.controllers', [])
 
     .controller('PropertyCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
         console.log("In PropertyCtrl");
+        hideOrShowBackBtn();
 
         // Update the currently-in-use property when we load this one
         var re = /[0-9]+$/;
@@ -129,17 +152,17 @@ angular.module('RealEstateApp.controllers', [])
 
     .controller('AnalysisCtrl', function($scope) {
         console.log("In AnalysisCtrl");
-
+        hideOrShowBackBtn();
     })
 
     .controller('FinancingCtrl', function($scope) {
         console.log("In FinancingCtrl");
-
+        hideOrShowBackBtn();
     })
 
     .controller('ProFormaCtrl', function($scope) {
         console.log("In ProFormaCtrl");
-
+        hideOrShowBackBtn();
 
         $scope.renderPDF = function() {
             var doc = new jsPDF();

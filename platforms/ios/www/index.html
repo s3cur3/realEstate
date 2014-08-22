@@ -42,7 +42,7 @@
 </head>
 
 <body ng-app="RealEstateApp" class="platform-ios platform-cordova platform-webview">
-<ion-nav-view></ion-nav-view>
+<ion-nav-view class="slide-left-right-ios7"></ion-nav-view>
 
 <script id="delete.html" type="text/ng-template">
     <div class="modal">
@@ -54,17 +54,15 @@
 
         <!-- Modal content area -->
         <ion-content class="content-pad">
-            <p>Are you <strong>sure</strong> you want to delete this property? (This can't be undone.)</p>
-
-            <button class="button button-positive text-center" ng-click="closeDelete()">
+            <p>Are you <strong>sure</strong> you want to delete this property?</p>
+            <p>This can't be undone.</p>
+            <button class="button button-positive button-large" ng-click="closeDelete()">
                 Cancel
             </button>
-            <button class="button button-assertive" ng-click="_delete()">
-                Yes, delete this property
+            <button class="button button-assertive button-large" ng-click="_delete()">
+                Delete this property forever
             </button>
-
         </ion-content>
-
     </div>
 </script>
 </body>

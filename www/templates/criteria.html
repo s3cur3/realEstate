@@ -6,30 +6,12 @@
         <h1 class="content-pad">Investment Targets</h1>
 
         <div class="list small-number-inputs">
-            <label class="item item-input">
-                <span class="input-label">Cap Rate</span>
-                <input type="number" class="right" ng-model="criteria.capRate"><span class="input-units">%</span>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">GRM</span>
-                <input type="number" class="right" ng-model="criteria.grm"><span class="input-units">&nbsp;</span>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Cash Flow</span>
-                <span class="input-units">$</span><input type="number" class="right" ng-model="criteria.cashFlow"><span class="input-units">&nbsp;</span>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Cash-on-Cash ROI</span>
-                <input type="number" class="right" ng-model="criteria.cashOnCashROI"><span class="input-units">%</span>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">LTV</span>
-                <input type="number" class="right" ng-model="criteria.ltv"><span class="input-units">%</span>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">DSCR</span>
-                <input type="number" class="right" ng-model="criteria.dscr"><span class="icon input-units">%</span>
-            </label>
+            <number-field label="Cap Rate" ng-model="criteria.capRate" suffix="%"></number-field>
+            <number-field label="GRM" ng-model="criteria.grm"></number-field>
+            <number-field label="Cash Flow" ng-model="criteria.cashFlow" prefix="$"></number-field>
+            <number-field label="Cash-on-Cash ROI" ng-model="criteria.cashOnCashROI" suffix="%"></number-field>
+            <number-field label="LTV" ng-model="criteria.ltv" suffix="%"></number-field>
+            <number-field label="DSCR" ng-model="criteria.dscr" suffix="%"></number-field>
         </div>
     </ion-content>
 </ion-view>
