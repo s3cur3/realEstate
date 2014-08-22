@@ -2,6 +2,7 @@ angular.module('RealEstateApp.controllers', [])
 
     .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', function( $scope, $location, $ionicModal, PropertyService, CalculatorService ) {
         // Set up property functionality
+        $scope.propertyService = PropertyService;
         $scope.properties = PropertyService.allProperties();
         $scope.property = $scope.properties[ PropertyService.getLastActiveIndex() ];
 
