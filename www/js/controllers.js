@@ -1,6 +1,6 @@
 function hideOrShowBackBtn() {
     function hideOrShowBackBtnNonRecursive() {
-        var backBtnVisible = $(".back-button").is(":visible");
+        var backBtnVisible = $(".back-button").is(":visible") && $(".back-button.ng-hide").length == 0;
         var menuBtn = $('.buttons.left-buttons');
         if( backBtnVisible ) {
             console.log("back btn found");
