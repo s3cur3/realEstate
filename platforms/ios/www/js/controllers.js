@@ -64,7 +64,9 @@ angular.module('RealEstateApp.controllers', [])
 
             var giveGreenLight = true;
             for( var fn in $scope.analysis ) {
-                giveGreenLight &= $scope.analysis[fn](p);
+                if( $scope.analysis.hasOwnProperty(fn) ) {
+                    giveGreenLight &= $scope.analysis[fn](p);
+                }
             }
             return giveGreenLight;
         };

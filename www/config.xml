@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.ionicframework.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>HelloCordova</name>
+    <name>Real Estate Investment Calculator</name>
     <description>
-        An Ionic Framework and Cordova project.
+        An app for real estate investors.
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+    <author email="tyler@conversioninsights.net" href="http://ionicframework.com/">
+        Ionic Framework Team
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -14,6 +14,6 @@
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <feature name="StatusBar">
-      <param name="ios-package" value="CDVStatusBar" onload="true" />
+        <param name="ios-package" value="CDVStatusBar" onload="true" />
     </feature>
 </widget>

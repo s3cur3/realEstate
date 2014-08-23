@@ -10,11 +10,11 @@
     <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature>
-    <name>HelloCordova</name>
+    <name>Real Estate Investment Calculator</name>
     <description>
-        An Ionic Framework and Cordova project.
+        An app for real estate investors.
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
+    <author email="tyler@conversioninsights.net" href="http://ionicframework.com/">
       Ionic Framework Team
     </author>
     <content src="index.html" />

@@ -1,6 +1,215 @@
 
 angular.module('RealEstateApp.services', [])
 
+    .service('PropertyService', function() {
+        var _Property = function() {
+            return {
+                id: _this._getNextID(),
+                basics: {
+                    name: "New property"
+                },
+
+                images: [],
+
+                initial: {
+                    purchasePrice: 0,
+                    repairsAndImprovements: 0
+                },
+                value: {
+                    appraisedValue: 0
+                },
+
+                // Income
+                income : {
+                    grossMonthlyRentalIncome: 0,
+                    otherMonthlyIncome: 0
+                },
+                totalAnnualOperatingIncome: 0,
+
+                // Expenses
+                expenses: {
+                    vacancyRateLoss: 10,
+                    annualPropertyTax: 0,
+                    annualInsurance: 0,
+                    propertyManagementPercent: 0,
+                    maintenancePercent: 10,
+                    miscMonthlyExpenses: 0
+                },
+                totalAnnualOperatingExpenses: 2672.00,
+
+                // Investment stats
+                loan: {
+                    interestRate: 6.0,
+                    termYears: 15,
+                    downPaymentPercent: 20
+                }
+            }
+        };
+
+        this._getNextID = function() {
+            var all = _this.allProperties();
+
+            var id;
+            if( all.length > 0 ) {
+                id = all[ all.length - 1 ].id + 1;
+                console.log("Found ID to be " + id);
+            } else {
+                id = 0;
+                console.log("No known properties!");
+                console.log(all);
+            }
+
+            return id;
+        };
+
+        this.newProperty = function() {
+            var prop = _Property();
+            console.log("Created new property with ID " + prop.id);
+            _this.save(prop);
+
+            _this.setLastActiveIndex(prop.id);
+            return  prop;
+        };
+
+        this.getPropertyByID = function(id) {
+            var properties = _this.allProperties();
+
+
+            if( properties.length > 0 ) {
+                for( var i = 0; i < properties.length; i++ ) {
+                    if( properties[i].id == id ) {
+                        return properties[i];
+                    }
+                }
+
+                console.error("ERROR: Couldn't find property " + id);
+                return properties[0];
+            }
+            return _this.newProperty();
+        };
+
+        this.allProperties = function() {
+            // TODO: This is RIDICULOUSLY inefficient --- it's called all the damn time!
+            var propertiesString = window.localStorage['properties'];
+            var newProperties = [];
+            if( propertiesString ) {
+                var properties = angular.fromJson(propertiesString);
+
+                if( !Array.isArray(properties) ) {
+                    newProperties.push(_Property());
+                    return newProperties;
+                }
+
+                // TODO: Remove this?
+                // Nuke any properties without an id
+                _.remove( properties, function(prop) {
+                    if( typeof prop == "object" && prop ) {
+                        return prop.id == null;
+                    }
+                    return true; // Not an object; what's it doing here??
+                });
+
+                return properties;
+            }
+            newProperties.push(_Property());
+            return newProperties;
+        };
+
+        /**
+         * If property already exists in the list of properties, it will
+         * be updated. If it does not exist, we will append it.
+         * @param property {*}
+         * @param properties Array
+         * @returns Array The updated properties array
+         * @private
+         */
+        this._addPropertyToProperties = function( property, properties ) {
+            var foundProperty = false;
+            for( var i = 0; i < properties.length; i++ ) {
+                if( properties[i].id === property.id ) {
+                    foundProperty = true;
+                    properties[i] = property;
+                    break;
+                }
+            }
+
+            if( !foundProperty ) {
+                properties.push(property);
+            }
+
+            return properties;
+        };
+
+        this._orderProperties = function( properties ) {
+            function sortByID(a, b){
+                return ((a.id < b.id) ? -1 : ((a.id > b.id) ? 1 : 0));
+            }
+
+            properties.sort(sortByID);
+            return properties;
+        };
+
+        this.save = function( propertyOrProperties ) {
+            var properties = [];
+            if( !Array.isArray(propertyOrProperties) ) {
+                properties = _this.allProperties();
+
+                var property = propertyOrProperties;
+                assert( typeof property == "object", "Property is not an object" );
+                properties =  _this._addPropertyToProperties( property, properties );
+            } else {
+                properties = propertyOrProperties;
+            }
+
+            properties = _this._orderProperties(properties);
+
+            // TODO: make this more efficient?
+            window.localStorage['properties'] = angular.toJson(properties);
+        };
+
+        this.delete = function( property ) {
+            var properties = _this.allProperties();
+            _.remove( properties, function(prop) {
+                return prop.id == property.id;
+            });
+            _this.save(properties);
+        };
+
+        this.getLastActiveIndex = function() {
+            var lastActive = window.localStorage['lastActiveProperty'];
+            if( lastActive === undefined ||
+                lastActive == null ||
+                lastActive == "undefined" ) {
+                lastActive = -1;
+            }
+            return parseInt(lastActive);
+        };
+
+        this.setLastActiveIndex = function( indexOrProperty ) {
+            if( typeof indexOrProperty == "number" ) {
+                window.localStorage['lastActiveProperty'] = indexOrProperty;
+            } else {
+                window.localStorage['lastActiveProperty'] = _this._getIndexOfProperty(indexOrProperty);
+            }
+
+        };
+
+        this._getIndexOfProperty = function( prop ) {
+            assert(typeof prop == "object", "Sought property is not a valid property object.");
+
+            var all = _this.allProperties();
+            for( var i = 0; i < all.length; i++ ) {
+                if( all[i].id == prop.id ) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+
+        var DEMO = false;
+        var _this = this;
+    })
+
     .service('CalculatorService', function() {
         var _this = this;
 
@@ -121,220 +330,6 @@ angular.module('RealEstateApp.services', [])
         };
     })
 
-    .service('PropertyService', function() {
-        var _Property = function() {
-            return {
-                id: _this._getNextID(),
-                basics: {
-                    name: "New property"
-                },
-
-                images: [],
-
-                initial: {
-                    purchasePrice: 0,
-                    repairsAndImprovements: 0
-                },
-                value: {
-                    appraisedValue: 0
-                },
-
-                // Income
-                income : {
-                    grossMonthlyRentalIncome: 0,
-                    otherMonthlyIncome: 0
-                },
-                totalAnnualOperatingIncome: 0,
-
-                // Expenses
-                expenses: {
-                    vacancyRateLoss: 10,
-                    annualPropertyTax: 0,
-                    annualInsurance: 0,
-                    propertyManagementPercent: 0,
-                    maintenancePercent: 10,
-                    miscMonthlyExpenses: 0
-                },
-                totalAnnualOperatingExpenses: 2672.00,
-
-                // Investment stats
-                loan: {
-                    interestRate: 6.0,
-                    termYears: 15,
-                    downPaymentPercent: 20
-                }
-            }
-        };
-
-        this._getNextID = function() {
-            var all = _this.allProperties();
-
-            var id;
-            if( all.length > 0 ) {
-                id = all[ all.length - 1 ].id + 1;
-                console.log("Found ID to be " + id);
-            } else {
-                id = 0;
-                console.log("No known properties!");
-                console.log(all);
-            }
-
-            return id;
-        };
-
-        this.newProperty = function() {
-            var prop = _Property();
-            console.log("Created new property with ID " + prop.id);
-            _this.save(prop);
-
-            _this.setLastActiveIndex(prop.id);
-            return  prop;
-        };
-
-        this.getPropertyByID = function(id) {
-            var properties = _this.allProperties();
-
-
-            if( properties.length > 0 ) {
-                for( var i = 0; i < properties.length; i++ ) {
-                    if( properties[i].id == id ) {
-                        return properties[i];
-                    }
-                }
-
-                console.error("ERROR: Couldn't find property " + id);
-                return properties[0];
-            }
-            return _this.newProperty();
-        };
-
-        this.allProperties = function() {
-            // TODO: This is RIDICULOUSLY inefficient --- it's called all the damn time!
-            if( DEMO ) {
-                var list = [];
-                for( var i = 0; i < 10; i++ ) {
-                    list.push(_Property(i));
-                }
-                return list;
-            }
-
-            var propertiesString = window.localStorage['properties'];
-            if( propertiesString ) {
-                var properties = angular.fromJson(propertiesString);
-
-                if( !Array.isArray(properties) ) {
-                    return [];
-                }
-
-                // TODO: Remove this?
-                // Nuke any properties without an id
-                _.remove( properties, function(prop) {
-                    if( typeof prop == "object" && prop ) {
-                        return prop.id == null;
-                    }
-                    return true; // Not an object; what's it doing here??
-                });
-
-                return properties;
-            }
-            return [];
-        };
-
-        /**
-         * If property already exists in the list of properties, it will
-         * be updated. If it does not exist, we will append it.
-         * @param property {*}
-         * @param properties Array
-         * @returns Array The updated properties array
-         * @private
-         */
-        this._addPropertyToProperties = function( property, properties ) {
-            var foundProperty = false;
-            for( var i = 0; i < properties.length; i++ ) {
-                if( properties[i].id === property.id ) {
-                    foundProperty = true;
-                    properties[i] = property;
-                    break;
-                }
-            }
-
-            if( !foundProperty ) {
-                properties.push(property);
-            }
-
-            return properties;
-        };
-
-        this._orderProperties = function( properties ) {
-            function sortByID(a, b){
-                return ((a.id < b.id) ? -1 : ((a.id > b.id) ? 1 : 0));
-            }
-
-            properties.sort(sortByID);
-            return properties;
-        };
-
-        this.save = function( propertyOrProperties ) {
-            var properties = [];
-            if( !Array.isArray(propertyOrProperties) ) {
-                properties = _this.allProperties();
-
-                var property = propertyOrProperties;
-                assert( typeof property == "object", "Property is not an object" );
-                properties =  _this._addPropertyToProperties( property, properties );
-            } else {
-                properties = propertyOrProperties;
-            }
-
-            properties = _this._orderProperties(properties);
-
-            // TODO: make this more efficient?
-            window.localStorage['properties'] = angular.toJson(properties);
-        };
-
-        this.delete = function( property ) {
-            var properties = _this.allProperties();
-            _.remove( properties, function(prop) {
-                return prop.id == property.id;
-            });
-            _this.save(properties);
-        };
-
-        this.getLastActiveIndex = function() {
-            var lastActive = window.localStorage['lastActiveProperty'];
-            if( lastActive === undefined ||
-                lastActive == null ||
-                lastActive == "undefined" ) {
-                lastActive = -1;
-            }
-            return parseInt(lastActive);
-        };
-
-        this.setLastActiveIndex = function( indexOrProperty ) {
-            if( typeof indexOrProperty == "number" ) {
-                window.localStorage['lastActiveProperty'] = indexOrProperty;
-            } else {
-                window.localStorage['lastActiveProperty'] = _this._getIndexOfProperty(indexOrProperty);
-            }
-
-        };
-
-        this._getIndexOfProperty = function( prop ) {
-            assert(typeof prop == "object", "Sought property is not a valid property object.");
-
-            var all = _this.allProperties();
-            for( var i = 0; i < all.length; i++ ) {
-                if( all[i].id == prop.id ) {
-                    return i;
-                }
-            }
-            return -1;
-        };
-
-        var DEMO = false;
-        var _this = this;
-    })
-
     .service('CriteriaService', function() {
         var _Criteria = function() {
             return {
@@ -371,21 +366,30 @@ angular.module('RealEstateApp.services', [])
     })
 
     .factory('CameraFactory', ['$q', function($q) {
+        if( ionic.Platform.isWebView() && ionic.Platform.isReady ) { // running in the Cordova Web view
+            return {
+                getPicture: function(options) {
+                    var q = $q.defer();
 
-        return {
-            getPicture: function(options) {
-                var q = $q.defer();
+                    navigator.camera.getPicture(function(result) {
+                        // Do any magic you need
+                        q.resolve(result);
+                    }, function(err) {
+                        q.reject(err);
+                    }, options);
 
-                navigator.camera.getPicture(function(result) {
-                    // Do any magic you need
-                    q.resolve(result);
-                }, function(err) {
-                    q.reject(err);
-                }, options);
-
-                return q.promise;
+                    return q.promise;
+                }
+            }
+        } else {
+            return {
+                getPicture: function(options) {
+                    // TODO: Web implementation?
+                    return null;
+                }
             }
         }
+
     }])
 
 
