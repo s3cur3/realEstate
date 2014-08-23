@@ -2,9 +2,11 @@
 angular.module('RealEstateApp.services', [])
 
     .service('PropertyService', function() {
-        var _Property = function() {
+        var _Property = function(newID) {
+            if( typeof newID === "undefined" ) newID = _this._getNextID();
+
             return {
-                id: _this._getNextID(),
+                id: newID,
                 basics: {
                     name: "New property"
                 },
@@ -96,7 +98,7 @@ angular.module('RealEstateApp.services', [])
                 var properties = angular.fromJson(propertiesString);
 
                 if( !Array.isArray(properties) ) {
-                    newProperties.push(_Property());
+                    newProperties.push(_Property(0));
                     return newProperties;
                 }
 
@@ -111,7 +113,7 @@ angular.module('RealEstateApp.services', [])
 
                 return properties;
             }
-            newProperties.push(_Property());
+            newProperties.push(_Property(0));
             return newProperties;
         };
 
@@ -206,7 +208,6 @@ angular.module('RealEstateApp.services', [])
             return -1;
         };
 
-        var DEMO = false;
         var _this = this;
     })
 
