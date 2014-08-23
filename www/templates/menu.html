@@ -20,9 +20,11 @@
                     <i class="icon ion-ios7-home"></i>
                     Properties
                 </ion-item>
-                <div class="item spacer">
+
+                <!-- Most recent property stuff (only shows if the user has ever looked at a property) -->
+                <div class="item spacer" ng-show="propertyService.getLastActiveIndex() != -1">
                 </div>
-                <group label="Most Recent Property" id="menu-most-recent-property">
+                <group label="Most Recent Property" id="menu-most-recent-property" ng-show="propertyService.getLastActiveIndex() != -1">
                     <ion-item nav-clear menu-close href="#/app/properties/{{propertyService.getLastActiveIndex() + 1}}" class="item-icon-left">
                         <i class="icon ion-edit"></i>
                         {{property.basics.name}}

@@ -19,7 +19,7 @@ function hideOrShowBackBtn() {
 
 angular.module('RealEstateApp.controllers', [])
 
-    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', 'CriteriaService', function( $scope, $location, $ionicModal, PropertyService, CalculatorService, CriteriaService ) {
+    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', 'CriteriaService', 'CameraFactory', function( $scope, $location, $ionicModal, PropertyService, CalculatorService, CriteriaService, CameraFactory ) {
         // Set up property functionality
         $scope.propertyService = PropertyService;
         $scope.properties = PropertyService.allProperties();
@@ -202,6 +202,21 @@ angular.module('RealEstateApp.controllers', [])
             doc.save('Pro Forma.pdf');
         }
     })
+
+    .controller('PhotoCtrl', ['$scope', 'CameraFactory', function($scope, CameraFactory) {
+        $scope.getPhoto = function() {
+            CameraFactory.getPicture().then(function(imageURI) {
+                console.log(imageURI);
+
+                if( !Array.isArray($scope.property.images) ) $scope.property.images = [];
+
+                $scope.property.images.push(imageURI);
+
+            }, function(err) {
+                console.err(err);
+            });
+        };
+    }])
 
 
 

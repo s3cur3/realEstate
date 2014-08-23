@@ -1,6 +1,25 @@
+function hideOrShowBackBtn() {
+    function hideOrShowBackBtnNonRecursive() {
+        var backBtnVisible = $(".back-button").is(":visible") && $(".back-button.ng-hide").length == 0;
+        var menuBtn = $('.buttons.left-buttons');
+        if( backBtnVisible ) {
+            console.log("back btn found");
+            menuBtn.hide();
+        } else {
+            console.log("no back btn found");
+            menuBtn.show();
+        }
+    }
+
+    hideOrShowBackBtnNonRecursive();
+    window.setTimeout(hideOrShowBackBtnNonRecursive, 50);
+    window.setTimeout(hideOrShowBackBtnNonRecursive, 100);
+    window.setTimeout(hideOrShowBackBtnNonRecursive, 300);
+}
+
 angular.module('RealEstateApp.controllers', [])
 
-    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', function( $scope, $location, $ionicModal, PropertyService, CalculatorService ) {
+    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', 'PropertyService', 'CalculatorService', 'CriteriaService', 'CameraFactory', function( $scope, $location, $ionicModal, PropertyService, CalculatorService, CriteriaService, CameraFactory ) {
         // Set up property functionality
         $scope.propertyService = PropertyService;
         $scope.properties = PropertyService.allProperties();
@@ -8,13 +27,9 @@ angular.module('RealEstateApp.controllers', [])
 
         $scope.calc = CalculatorService;
 
-        $scope.criteria = {
-            capRate: 12,
-            cashFlow: 250,
-            grm: 7,
-            dscr: 1.3,
-            ltv: 75
-        };
+        $scope.criteria = CriteriaService.allCriteria();
+
+        $scope.makePropertiesListComplex = true;
 
         $scope.selectProperty = function(prop, index) {
             $scope.property = prop;
@@ -22,27 +37,34 @@ angular.module('RealEstateApp.controllers', [])
         };
 
         $scope.analysis = {
-            capRateGood: function() {
-                return $scope.calc.getCapRate( $scope.property ) * 100 >= $scope.criteria.capRate;
+            capRateGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getCapRate(p) * 100 >= $scope.criteria.capRate;
             },
-            cashFlowGood: function() {
-                return $scope.calc.getCashFlow( $scope.property ) >= $scope.criteria.cashFlow;
+            cashFlowGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getCashFlow(p) >= $scope.criteria.cashFlow;
             },
-            dscrGood: function() {
-                return $scope.calc.getDSCR( $scope.property ) > $scope.criteria.dscr;
+            dscrGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getDSCR(p) > $scope.criteria.dscr;
             },
-            grmGood: function() {
-                return $scope.calc.getGRM( $scope.property ) < $scope.criteria.grm;
+            grmGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getGRM(p) < $scope.criteria.grm;
             },
-            ltvGood: function() {
-                return $scope.calc.getLTV( $scope.property ) * 100 < $scope.criteria.ltv;
+            ltvGood: function(p) {
+                if(!p) p = $scope.property;
+                return $scope.calc.getLTV(p) * 100 < $scope.criteria.ltv;
             }
         };
 
-        $scope.greenLight = function() {
+        $scope.greenLight = function(p) {
+            if(!p) p = $scope.property;
+
             var giveGreenLight = true;
             for( var fn in $scope.analysis ) {
-                giveGreenLight &= $scope.analysis[fn]();
+                giveGreenLight &= $scope.analysis[fn](p);
             }
             return giveGreenLight;
         };
@@ -56,6 +78,7 @@ angular.module('RealEstateApp.controllers', [])
             $scope.deleteModal = modal;
         });
 
+        // Tools for deleting a property
         $scope.delete = function(p) {
             $scope.propertyToDelete = p;
             $scope.deleteModal.show();
@@ -69,6 +92,7 @@ angular.module('RealEstateApp.controllers', [])
             $scope.deleteModal.hide();
         };
 
+        // Flags for dealing with editable text fields
         $scope.makeEditable = function(labelForField) {
             $scope.editable = labelForField;
         };
@@ -80,15 +104,38 @@ angular.module('RealEstateApp.controllers', [])
                 $scope.editable = null;
         };
 
+        // Update the master property list whenever we modify this property
+        $scope.$watch('property', function(updatedProperty, oldProperty) {
+            if( typeof updatedProperty == "object" && updatedProperty ) {
+                PropertyService.save(updatedProperty);
+                $scope.properties = PropertyService.allProperties();
+            } else {
+                console.log("Got empty property in an update...?");
+            }
+        }, true);
+
+        // Update the master criteria list whenever we modify this property
+        $scope.$watch('criteria', function(updatedCriteria, oldCriteria) {
+            if( typeof updatedCriteria == "object" && updatedCriteria ) {
+                console.log("Saving criteria:", updatedCriteria);
+                CriteriaService.save(updatedCriteria);
+                $scope.criteria = CriteriaService.allCriteria();
+            } else {
+                console.error("Got empty criteria list in an update...?");
+            }
+        }, true);
     }])
 
 
-    .controller('CriteriaCtrl', function($scope) {
+    .controller('CriteriaCtrl', ['$scope', 'CriteriaService', function($scope, CriteriaService) {
         console.log("In CriteriaCtrl");
-    })
+        hideOrShowBackBtn();
+    }])
 
     .controller('PropertiesCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
         console.log("In PropertiesCtrl");
+        hideOrShowBackBtn();
+
         $scope.properties = PropertyService.allProperties();
         if( $scope.properties.length == 0 ) {
             $scope.property = PropertyService.newProperty();
@@ -104,49 +151,31 @@ angular.module('RealEstateApp.controllers', [])
             console.log("Setting path to " + '/properties/' + PropertyService.getLastActiveIndex());
             $location.path('/#/properties/' + PropertyService.getLastActiveIndex());
         }
-
     }])
 
     .controller('PropertyCtrl', ['$scope', '$location', 'PropertyService', function($scope, $location, PropertyService) {
         console.log("In PropertyCtrl");
+        hideOrShowBackBtn();
 
         // Update the currently-in-use property when we load this one
         var re = /[0-9]+$/;
         var id = $location.url().match(re);
         $scope.selectProperty( PropertyService.getPropertyByID(id) );
-
-        // Update the master property list whenever we modify this property
-        $scope.$watch('property', function(updatedProperty, oldProperty) {
-            if( typeof updatedProperty == "object" && updatedProperty ) {
-                PropertyService.save(updatedProperty);
-                $scope.properties = PropertyService.allProperties();
-            } else {
-                console.log("Got empty property in an update...?");
-            }
-        }, true);
-
     }])
 
     .controller('AnalysisCtrl', function($scope) {
         console.log("In AnalysisCtrl");
+        hideOrShowBackBtn();
     })
 
     .controller('FinancingCtrl', function($scope) {
         console.log("In FinancingCtrl");
+        hideOrShowBackBtn();
     })
 
     .controller('ProFormaCtrl', function($scope) {
         console.log("In ProFormaCtrl");
-
-        var backBtn = document.querySelector(".back-button");
-        var menuBtn = document.querySelector('.menu-button');
-        if( backBtn ) {
-            console.log("back btn found");
-            angular.element(menuBtn).addClass('hidden');
-        } else {
-            console.log("no back btn found");
-            angular.element(menuBtn).removeClass('hidden');
-        }
+        hideOrShowBackBtn();
 
         $scope.renderPDF = function() {
             var doc = new jsPDF();
@@ -173,6 +202,21 @@ angular.module('RealEstateApp.controllers', [])
             doc.save('Pro Forma.pdf');
         }
     })
+
+    .controller('PhotoCtrl', ['$scope', 'CameraFactory', function($scope, CameraFactory) {
+        $scope.getPhoto = function() {
+            CameraFactory.getPicture().then(function(imageURI) {
+                console.log(imageURI);
+
+                if( !Array.isArray($scope.property.images) ) $scope.property.images = [];
+
+                $scope.property.images.push(imageURI);
+
+            }, function(err) {
+                console.err(err);
+            });
+        };
+    }])
 
 
 
