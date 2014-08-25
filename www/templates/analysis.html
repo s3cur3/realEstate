@@ -40,15 +40,15 @@
 
         <calculated-field label="Years to Recoup Investment">{{calc.getTotalCashOutlay(property) / calc.getCashFlow(property) / 12 | number:2 }}</calculated-field>
 
-        <a class="item button button-full button-positive" href="/#/app/properties/{{property.id}}/financing">
+        <a class="item button button-full button-positive" href="#/app/properties/{{property.id}}/financing">
             View financing summary
         </a>
-        <a class="item button button-full button-positive" href="/#/app/properties/{{property.id}}/pro-forma">
+        <a class="item button button-full button-positive" href="#/app/properties/{{property.id}}/pro-forma">
             View pro forma
         </a>
-        <div class="item spacer">
+        <div class="item spacer invisible">
         </div>
-        <div class="item spacer">
+        <div class="item spacer invisible">
         </div>
     </ion-content>
     <div class="bar bar-footer " ng-class="{'bar-balanced': greenLight(), 'bar-assertive': !greenLight()}">

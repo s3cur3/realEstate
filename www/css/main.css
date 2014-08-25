@@ -65,6 +65,9 @@ input[type=text].item-field {
 .spacer {
   height: 40px;
 }
+.spacer.invisible {
+    border: none;
+}
 
 /** Buttons **/
 .button.dangerous {

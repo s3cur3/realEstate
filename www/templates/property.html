@@ -52,18 +52,18 @@
                 <number-field label="Misc. Monthly Expenses" ng-model="property.expenses.miscMonthlyExpenses" prefix="$"></number-field>
                 <calculated-field label="Total Expenses (Annual)">{{ calc.getAnnualExpenses(property) | currency}}</calculated-field>
             </group>
-            <a class="item button button-full button-positive" href="/#/app/properties/{{property.id}}/analysis">
+            <a class="item button button-full button-positive" href="#/app/properties/{{property.id}}/analysis">
                 Get property analysis
             </a>
 
-            <a class="item button button-full" href="/#/app/properties/{{property.id}}/financing">
+            <a class="item button button-full" href="#/app/properties/{{property.id}}/financing">
                 View financing summary
             </a>
-            <a class="item button button-full" href="/#/app/properties/{{property.id}}/pro-forma">
+            <a class="item button button-full" href="#/app/properties/{{property.id}}/pro-forma">
                 View pro forma
             </a>
 
-            <div class="item spacer">
+            <div class="item spacer invisible">
             </div>
 
             <button class="item button button-full button-assertive dangerous" ng-click="delete(property)">
