@@ -1,8 +1,14 @@
+
+function backBtnIsVisible() {
+    var btnFound = $(".back-button").length > 0;
+    return $(".back-button").is(":visible") || (btnFound && $(".back-button.ng-hide").length == 0);
+}
+
+var hideShowTimeouts = [];
 function hideOrShowBackBtn() {
     function hideOrShowBackBtnNonRecursive() {
-        var backBtnVisible = $(".back-button").is(":visible") && $(".back-button.ng-hide").length == 0;
         var menuBtn = $('.buttons.left-buttons');
-        if( backBtnVisible ) {
+        if( backBtnIsVisible() ) {
             console.log("back btn found");
             menuBtn.hide();
         } else {
@@ -11,10 +17,13 @@ function hideOrShowBackBtn() {
         }
     }
 
+    for( var i = 0; i < hideShowTimeouts.length; i++) clearTimeout(hideShowTimeouts[i]);
+    hideShowTimeouts = [];
+
     hideOrShowBackBtnNonRecursive();
-    window.setTimeout(hideOrShowBackBtnNonRecursive, 50);
-    window.setTimeout(hideOrShowBackBtnNonRecursive, 100);
-    window.setTimeout(hideOrShowBackBtnNonRecursive, 300);
+    var millisecondsToRunAt = [50, 100, 200, 400, 600, 800, 1000, 1200, 1800, 3200, 4000];
+    for( var j = 0; j < millisecondsToRunAt.length; j++)
+        hideShowTimeouts.push(window.setTimeout(hideOrShowBackBtnNonRecursive, millisecondsToRunAt[j]));
 }
 
 angular.module('RealEstateApp.controllers', [])
